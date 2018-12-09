@@ -3,6 +3,7 @@ package implementations;
 import api.* ; 
 import exceptions.ConflictingRuleException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,10 +27,13 @@ public class CompatibilityManagerImpl implements CompatibilityManager {
                     throw new ConflictingRuleException();
                 }else if (getRequiredPart(pt).contains(ref)) {
                     throw new ConflictingRuleException();
-                } else {
-                    if (incompatibilities.containsKey(ref) && !getIncompatiblePart(ref).contains(pt)) {
-                        incompatibilities.get(ref).add(pt);
-                    }
+                } 
+		    }else {
+                if (incompatibilities.containsKey(ref) && !getIncompatiblePart(ref).contains(pt)) {
+                    incompatibilities.get(ref).add(pt);
+                }else {
+                	incompatibilities.put(ref, new ArrayList<PartType>());
+                	incompatibilities.get(ref).add(pt);
                 }
             }
 		}
@@ -47,9 +51,12 @@ public class CompatibilityManagerImpl implements CompatibilityManager {
 			    }else if (getIncompatiblePart(pt).contains(ref)) {
 			        throw new ConflictingRuleException();
 			    }
-			    else {
+            }else {
+		    	if (requirements.containsKey(ref) && !getRequiredPart(ref).contains(pt)) {
                     requirements.get(ref).add(pt);
-                    requirements.get(pt).add(ref);
+                }else {
+                	requirements.put(ref, new ArrayList<PartType>());
+                	requirements.get(ref).add(pt);
                 }
 			}
 		}
@@ -58,11 +65,19 @@ public class CompatibilityManagerImpl implements CompatibilityManager {
 
 	@Override
 	public Collection<PartType> getIncompatiblePart(PartType ref) {
-		return incompatibilities.get(ref);
+		for(PartType pt : incompatibilities.keySet()) {
+			if(pt.getName() == ref.getName())
+				return incompatibilities.get(pt);
+		}
+		return null;
 	}
 	
 	@Override
 	public Collection<PartType> getRequiredPart(PartType ref) {
-		return requirements.get(ref);
+		for(PartType pt : requirements.keySet()) {
+			if(pt.getName() == ref.getName())
+				return requirements.get(pt);
+		}
+		return null;
 	}
 }

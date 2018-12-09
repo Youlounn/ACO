@@ -4,9 +4,9 @@ import implementations.PartTypeImpl;
 
 public interface Configuration {
 
-	  public Boolean isValid();
+	  public boolean isValid();
 
-	  public Boolean isComplete();
+	  public boolean isComplete();
 
 	  public PartTypeImpl getSelectionForCategory(Category Category);
 

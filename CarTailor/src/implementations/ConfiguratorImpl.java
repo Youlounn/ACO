@@ -21,14 +21,14 @@ import implementations.*;
 public class ConfiguratorImpl implements Configurator {
 	
 	Collection <Category> categories = new ArrayList<Category>();
-	HashMap<Category, Collection<PartType>> catToParts = new HashMap<>();
+	HashMap<String, Collection<PartType>> catToParts = new HashMap<>();
 
 	CompatibilityManager cm = new CompatibilityManagerImpl();
 
 	private void init() throws ConflictingRuleException{
 
-        Collection<PartType> Incompatibilities = new ArrayList<PartType>();
-        Collection<PartType> Requirements = new ArrayList<PartType>();
+        Collection<PartType> incomp = new ArrayList<PartType>();
+        Collection<PartType> req = new ArrayList<PartType>();
 
         //Initialisation des Category
 
@@ -51,13 +51,13 @@ public class ConfiguratorImpl implements Configurator {
 		PartType ED180 = new PartTypeImpl("ED180",engine,"Diesel 180KW",ED180.class);
 		PartType EH120 = new PartTypeImpl("EH120",engine,"Gasoline/Electric hybrid, 100KW",EH120.class);
 
-		catToParts.put(engine,new ArrayList<PartType>());
-		catToParts.get(engine).add(EG100);
-		catToParts.get(engine).add(EG133);
-		catToParts.get(engine).add(EG210);
-		catToParts.get(engine).add(ED110);
-		catToParts.get(engine).add(ED180);
-		catToParts.get(engine).add(EH120);
+		catToParts.put(engine.getName(),new ArrayList<PartType>());
+		catToParts.get(engine.getName()).add(EG100);
+		catToParts.get(engine.getName()).add(EG133);
+		catToParts.get(engine.getName()).add(EG210);
+		catToParts.get(engine.getName()).add(ED110);
+		catToParts.get(engine.getName()).add(ED180);
+		catToParts.get(engine.getName()).add(EH120);
 
         //Initialisation des PartType Transmission
 
@@ -68,13 +68,13 @@ public class ConfiguratorImpl implements Configurator {
         PartType TSF7 = new PartTypeImpl("TSF7",transmission,"Sequential, 7 gears, 4 wheels drive",TSF7.class);
         PartType TC120 = new PartTypeImpl("TC120",transmission,"Converter, 120 Kw max",TC120.class);
 
-		catToParts.put(transmission,new ArrayList<PartType>());
-		catToParts.get(transmission).add(TM5);
-		catToParts.get(transmission).add(TM6);
-		catToParts.get(transmission).add(TA5);
-		catToParts.get(transmission).add(TS6);
-		catToParts.get(transmission).add(TSF7);
-		catToParts.get(transmission).add(TC120);
+		catToParts.put(transmission.getName(),new ArrayList<PartType>());
+		catToParts.get(transmission.getName()).add(TM5);
+		catToParts.get(transmission.getName()).add(TM6);
+		catToParts.get(transmission.getName()).add(TA5);
+		catToParts.get(transmission.getName()).add(TS6);
+		catToParts.get(transmission.getName()).add(TSF7);
+		catToParts.get(transmission.getName()).add(TC120);
 
         //Initialisation des PartType Exterior
 
@@ -82,10 +82,10 @@ public class ConfiguratorImpl implements Configurator {
         PartType XM = new PartTypeImpl("XM",exterior,"Metallic paint",XM.class);
         PartType XS = new PartTypeImpl("XS",exterior,"Red paint and sport decoration",XS.class);
 
-		catToParts.put(exterior,new ArrayList<PartType>());
-		catToParts.get(exterior).add(XC);
-		catToParts.get(exterior).add(XM);
-		catToParts.get(exterior).add(XS);
+		catToParts.put(exterior.getName(),new ArrayList<PartType>());
+		catToParts.get(exterior.getName()).add(XC);
+		catToParts.get(exterior.getName()).add(XM);
+		catToParts.get(exterior.getName()).add(XS);
 
         //Initialisation des PartType Interior
 
@@ -93,51 +93,72 @@ public class ConfiguratorImpl implements Configurator {
         PartType IH = new PartTypeImpl("IH",interior,"High-end interior",IH.class);
         PartType IS = new PartTypeImpl("IS",interior,"Sport finish",IS.class);
 
-		catToParts.put(interior,new ArrayList<PartType>());
-		catToParts.get(interior).add(IN);
-		catToParts.get(interior).add(IH);
-		catToParts.get(interior).add(IS);
+		catToParts.put(interior.getName(),new ArrayList<PartType>());
+		catToParts.get(interior.getName()).add(IN);
+		catToParts.get(interior.getName()).add(IH);
+		catToParts.get(interior.getName()).add(IS);
 
-        //Initialtisation des Incompatibility de TA5
-        Incompatibilities.removeAll(Incompatibilities);
-        Incompatibilities.add(EG100);
-        cm.addIncompatibilities(TA5,Incompatibilities);
+        //incompatibilités TA5
+        incomp = new ArrayList<PartType>();
+        incomp.add(EG100);
+        cm.addIncompatibilities(TA5,incomp);
 
-        //Initialtisation des Incompatibility de TSF7
-        Incompatibilities.removeAll(Incompatibilities);
-        Incompatibilities.add(EG100);
-        Incompatibilities.add(EG133);
-        Incompatibilities.add(ED110);
-        cm.addIncompatibilities(TSF7,Incompatibilities);
+        //incompatibilités TSF7
+        incomp = new ArrayList<PartType>();
+        incomp.add(EG100);
+        incomp.add(EG133);
+        incomp.add(ED110);
+        cm.addIncompatibilities(TSF7,incomp);
 
-        //Initialtisation des Incompatibility de XC
-        Incompatibilities.removeAll(Incompatibilities);
-        Incompatibilities.add(EG210);
-        cm.addIncompatibilities(XC,Incompatibilities);
+        //incompatibilités XC
+        incomp = new ArrayList<PartType>();
+        incomp.add(EG210);
+        cm.addIncompatibilities(XC,incomp);
 
-        //Initialtisation des Incompatibility de XM
-        Incompatibilities.removeAll(Incompatibilities);
-        Incompatibilities.add(EG100);
-        cm.addIncompatibilities(XM,Incompatibilities);
+        //incompatibilités XM
+        incomp = new ArrayList<PartType>();
+        incomp.add(EG100);
+        cm.addIncompatibilities(XM,incomp);
 
-        //Initialtisation des Incompatibility de XS
-        Incompatibilities.removeAll(Incompatibilities);
-        Incompatibilities.add(EG100);
-        cm.addIncompatibilities(XS,Incompatibilities);
+        //incompatibilités XS
+        incomp = new ArrayList<PartType>();
+        incomp.add(EG100);
+        cm.addIncompatibilities(XS,incomp);
 
-        //Initialtisation des Incompatibility de IS
-        Incompatibilities.removeAll(Incompatibilities);
-        Incompatibilities.add(EG100);
-        Incompatibilities.add(TM5);
-        cm.addIncompatibilities(IS,Incompatibilities);
+        //incompatibilités IS
+        incomp = new ArrayList<PartType>();
+        incomp.add(EG100);
+        incomp.add(TM5);
+        cm.addIncompatibilities(IS,incomp);
+
+        //requierements EH120
+        req = new ArrayList<PartType>();
+        req.add(TC120);
+        cm.addRequirements(EH120,req);
+        
+        //requierements TC120
+        req = new ArrayList<PartType>();
+        req.add(EH120);
+        cm.addRequirements(TC120,req);
+
+        //requierements XS
+        req = new ArrayList<PartType>();
+        req.add(IS);
+        cm.addRequirements(XS,req);
+        
+        //requierements IS
+        req = new ArrayList<PartType>();
+        req.add(XS);
+        cm.addRequirements(IS,req);
 	}
 	
+	public CompatibilityManager getCompatibilityManager(){
+		return this.cm;
+	}
 	
 	public ConfiguratorImpl() throws ConflictingRuleException {
 		init();
 	}
-	
-	
 	
     @Override
     public Configuration getConfiguration() {
@@ -146,7 +167,7 @@ public class ConfiguratorImpl implements Configurator {
 
     @Override
     public Collection<PartType> getVariants(Category category) {
-        return catToParts.get(category);
+        return catToParts.get(category.getName());
     }
     
 }
